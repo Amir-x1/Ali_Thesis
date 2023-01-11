@@ -8,13 +8,13 @@ NodesCount = 100
 # Maximum signal range in meters
 MaxSignalDistance = 15
 # Distance calculation error
-error = 0.01
+error = 0
 # X  and Y of study area in meters
 X = 100
 Y = 100
 # the position of Sink node
 SinkX = 50
-SinkY = 50
+SinkY = 41
 # position of first known node
 FnodeX = 54
 FnodeY = 54
@@ -86,6 +86,7 @@ for i in Nodes:
 for i in Nodes:
     if joints[int(i)][0] != 0 and joints[int(i)][1] != 0:
         knownNodes[int(i)] = 1
+        thisNode = [Nodes[str(i)]['x'], Nodes[str(i)]['y']]
         fN = [Nodes[str(joints[int(i)][0])]['x'], Nodes[str(joints[int(i)][0])]['y']]
         sN = [Nodes[str(joints[int(i)][1])]['x'], Nodes[str(joints[int(i)][1])]['y']]
         # print(str(joints[int(i)][1]))
@@ -93,7 +94,12 @@ for i in Nodes:
         # print(fN)
         # print(sN)
         # print(Sink)
-        calculatedPositions[int(i)] = position_calculator(fN, sN, Sink, error)
-
+        radius1 = distance(fN, thisNode, error)
+        radius2 = distance(sN, thisNode, error)
+        radiusSink = distance(Sink, thisNode, error)
+        calculatedPositions[int(i)] = position_calculator(fN, radius1, sN, radius2, Sink, radiusSink, error)
+        print(i)
+        print(calculatedPositions[int(i)])
 # print(joints)
 # print(knownNodes)
+# print(calculatedPositions)

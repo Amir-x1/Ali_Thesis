@@ -23,30 +23,55 @@ def receiver(first_node, second_node, max_signal_distance, error):
         return 0
 
 
-def position_calculator(first_node, second_node, sink, error):
-    x1 = first_node[0]
-    y1 = first_node[1]
-    x2 = second_node[0]
-    y2 = second_node[1]
-    x3 = sink[0]
-    y3 = sink[1]
+def intersecting_points_of_two_circle(first_node, r0, second_node, r1):
+    x0 = first_node[0]
+    y0 = first_node[1]
+    x1 = second_node[0]
+    y1 = second_node[1]
+    # circle 1: (x0, y0), radius r0
+    # circle 2: (x1, y1), radius r1
+    d = math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2)
 
-    x12 = first_node[0] ** 2
-    y12 = first_node[1] ** 2
-    x22 = second_node[0] ** 2
-    y22 = second_node[1] ** 2
-    x32 = sink[0]**2
-    y32 = sink[1]**2
+    # non intersecting
+    if d > r0 + r1:
+        return None
+    # One circle within other
+    if d < abs(r0 - r1):
+        return None
+    # coincident circles
+    if d == 0 and r0 == r1:
+        return None
+    else:
+        a = (r0 ** 2 - r1 ** 2 + d ** 2) / (2 * d)
+        h = math.sqrt(r0 ** 2 - a ** 2)
+        x2 = x0 + a * (x1 - x0) / d
+        y2 = y0 + a * (y1 - y0) / d
+        x3 = x2 + h * (y1 - y0) / d
+        y3 = y2 - h * (x1 - x0) / d
 
-    print(x1)
-    print(x2)
-    print(x3)
-    print(y1)
-    print(y2)
-    print(y3)
+        x4 = x2 - h * (y1 - y0) / d
+        y4 = y2 + h * (x1 - x0) / d
 
-    a = -(-x12*y2 + x12*y3 + x22*y1 - x22*y3 - x32*y1 + x32*y2 - y12*y2 + y12*y3 + y1*y22 - y1*y32 - y22*y3 + y32*y2) \
-        / (2*x1*y2 - 2*x1*y3 - 2*x2*y1 - 2*x2*y3 - 2*x3*y1 - 2*x3*y2)
-    b = -(x12*x2 - x12*x3 - x1*x22 + x1*x32 - x1*y22 + x1*y32 + x3*x22 - x32*x2 + y12*x2 - x2*y32 - y12*x3 + x3*y22)\
-        / (2*x1*y2 - 2*x1*y3 - 2*x2*y1 + 2*x2*y3 + 2*x3*y1 - 2*x3*y2)
-    return [a, b]
+        return [x3, y3], [x4, y4]
+
+
+def position_calculator(first_node, r0, second_node, r1, sink, rs, error):
+    a, b = intersecting_points_of_two_circle(first_node, r0, second_node, r1)
+    c, d = intersecting_points_of_two_circle(first_node, r0, sink, rs)
+
+    # print(a)
+    # print(b)
+    # print(c)
+    # print(d)
+    if a[0] == c[0] and a[1] == c[1]:
+        print('a1')
+        return a
+    elif a[0] == d[0] and a[1] == d[1]:
+        print('a2')
+        return a
+    elif b[0] == c[0] and b[1] == c[1]:
+        print('b1')
+        return b
+    elif b[0] == d[0] and b[1] == d[1]:
+        print('b2')
+        return b
