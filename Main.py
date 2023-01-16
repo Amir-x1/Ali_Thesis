@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 # ################## User inputs
 # number of nodes
-NodesCount = 500
+NodesCount = 200
 # Maximum signal range in meters
-MaxSignalDistance = 25
+MaxSignalDistance = 20
 # Distance calculation error
-error = 0.000
+error = 0.01
 # X  and Y of study area in meters
 X = 100
 Y = 100
@@ -67,6 +67,9 @@ for i in Nodes:
 calculatedLocations = []
 for i in range(NodesCount + 1):
     calculatedLocations.append([0, 0])
+calculatedLocations[0] = Sink
+calculatedLocations[1] = [FnodeX, FnodeY]
+calculatedLocations[2] = [SnodeX, SnodeY]
 anchors = []
 for i in range(NodesCount + 1):
     anchors.append([0, 0])
@@ -111,8 +114,8 @@ while sum(knownNodes) <= NodesCount:
             # print('node ' + i)
             knownNodes[int(i)] = 1
             thisNode = [Nodes[i]['x'], Nodes[i]['y']]
-            fN = [Nodes[str(anchors[int(i)][0])]['x'], Nodes[str(anchors[int(i)][0])]['y']]
-            sN = [Nodes[str(anchors[int(i)][1])]['x'], Nodes[str(anchors[int(i)][1])]['y']]
+            fN = [calculatedLocations[(anchors[int(i)][0])][0], calculatedLocations[(anchors[int(i)][0])][1]]
+            sN = [calculatedLocations[(anchors[int(i)][1])][0], calculatedLocations[(anchors[int(i)][1])][1]]
             radius1 = distance(fN, thisNode, error)
             radius2 = distance(sN, thisNode, error)
             radiusSink = distance(Sink, thisNode, error)
@@ -139,7 +142,7 @@ while sum(knownNodes) <= NodesCount:
 # print(joints)
 # print(knownNodes)
 print(str(sum(knownNodes)-1) + " Nodes has been Found!")
-print(calculatedLocations[190])
+# print(calculatedLocations[190])
 
 ActualLocations = []
 for i in range(NodesCount + 1):

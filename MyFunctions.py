@@ -59,8 +59,7 @@ def intersecting_points_of_two_circle(first_node, r0, second_node, r1):
 
 
 def position_calculator(first_node, r0, second_node, r1, sink, rs, error):
-    e = error * random.randint(-100, 100) / 100
-    e = e + 1
+    e = error*100
     a, b = intersecting_points_of_two_circle(first_node, r0, sink, rs)
     c, d = intersecting_points_of_two_circle(second_node, r1, sink, rs)
     if a is None or b is None:
@@ -71,29 +70,21 @@ def position_calculator(first_node, r0, second_node, r1, sink, rs, error):
         c, d = intersecting_points_of_two_circle(second_node, r1, first_node, r0)
     if a is None or b is None or c is None or d is None:
         return None
-    if abs(a[0] - c[0]) < 0.0001 and abs(a[1] - c[1]) < 0.0001:
+    if abs(a[0] - c[0]) < e and abs(a[1] - c[1]) < e:
         if a is None or c is None:
             print("None")
-        a[0] *= e
-        a[1] *= e
         return a
-    elif abs(a[0] - d[0]) < 0.0001 and abs(a[1] - d[1]) < 0.0001:
+    elif abs(a[0] - d[0]) < e and abs(a[1] - d[1]) < e:
         if a is None or d is None:
             print("None")
-        a[0] *= e
-        a[1] *= e
         return a
-    elif abs(b[0] - c[0]) < 0.0001 and abs(b[1] - c[1]) < 0.0001:
+    elif abs(b[0] - c[0]) < e and abs(b[1] - c[1]) < e:
         if c is None or b is None:
             print("None")
-        b[0] *= e
-        b[1] *= e
         return b
-    elif abs(b[0] - d[0]) < 0.0001 and abs(b[1] - d[1]) < 0.0001:
+    elif abs(b[0] - d[0]) < e and abs(b[1] - d[1]) < e:
         if d is None or b is None:
             print("None")
-        b[0] *= e
-        b[1] *= e
         return b
     else:
         print("None: No interaction point found")
